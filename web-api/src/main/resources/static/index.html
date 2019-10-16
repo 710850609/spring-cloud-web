@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>别看了，没有标题</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="/css/element-ui@2.4.9.css">
+    <!-- 引入组件库 -->
+    <script src="/js/vue.min.js"></script>
+    <script src="/js/element-ui@2.4.9.js"></script>
+    <script src="/js/axios.min.js"></script>
+
+</head>
+<body>
+    <div id="app">
+        <el-container style="border: 1px solid #eee">
+            <el-header>
+                <el-form :inline="true" :model="queryBean">
+                    <el-form-item label="id">
+                        <el-input size="mini" v-model="queryBean.id" placeholder="请输入查询id" manlength="50" @keyup.enter.native="getListData"></el-input>
+                    </el-form-item>
+                    <el-form-item label="姓名">
+                        <el-input size="mini" v-model="queryBean.name" placeholder="请输入查询姓名" maxlength="5" @keyup.enter.native="getListData"></el-input>
+                    </el-form-item>
+                    <el-form-item label="性别" width="100px">
+                        <el-select v-model="queryBean.gender" placeholder="请选择查询性别" size="mini">
+                            <el-option v-for="gender in genderOptions" :key="gender.code" :label="gender.value" :value="gender.code"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item v-model="queryBean.birthday" label="出生日期">
+                        <el-date-picker
+                                size="mini"
+                                v-model="queryBean.birthday"
+                                type="daterange"
+                                range-separator="至"
+                                start-placeholder="开始日期"
+                                end-placeholder="结束日期">
+                        </el-date-picker>
+                    </el-form-item>
+                <el-button type="primary" size="mini" @click="getListData">查询</el-button>
+                <el-button type="primary" size="mini" @click="handleAdd">新增</el-button>
+            </el-header>
+
+            <el-main style="width: 100%">
+                <el-table :data="list" stripe :height="tableHeight">
+                    <el-table-column prop="id" label="id" align="center"></el-table-column>
+                    <el-table-column prop="name" label="姓名" align="center"></el-table-column>
+                    <el-table-column prop="birthday" label="出生日期" align="center"></el-table-column>
+                    <el-table-column label="性别" align="center">
+                        <template slot-scope="scope">
+                            <span>{{ scope.row.gender | genderFormat }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作" align="center">
+                        <template slot-scope="scope">
+                            <el-tooltip placement="left" content="编辑" effect="light">
+                                <el-button type="success" icon="el-icon-edit" circle @click="handleUpdate(scope.row)" />
+                            </el-tooltip>
+                            <el-tooltip content="删除" placement="right" effect="light">
+                                <el-button type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row.id)" />
+                            </el-tooltip>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-main>
+
+            <el-footer>
+                <div class="block">
+                    <el-pagination
+                            @size-change="handleSizeChange"
+                            @current-change="handleCurrentChange"
+                            :current-page="pageNo"
+                            :page-sizes="[3, 5, 10, 50, 100]"
+                            :page-size="pageSize"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="total">
+                    </el-pagination>
+                </div>
+            </el-footer>
+        </el-container>
+
+        <!--编辑弹窗-->
+        <el-dialog :title="editType=='create' ? '创建用户' : '更新用户'" :visible.sync="editDialogVisible">
+            <el-form :model="editUser" ref="userForm" label-width="80px">
+                <el-form-item label="id" style="display: none">
+                    <el-input v-model="editUser.id"></el-input>
+                </el-form-item>
+                <el-form-item label="姓名">
+                    <el-input v-model="editUser.name"></el-input>
+                </el-form-item>
+                <el-form-item label="出生日期">
+                    <div class="block">
+                        <el-date-picker
+                                v-model="editUser.birthday"
+                                type="date"
+                                placeholder="选择日期">
+                        </el-date-picker>
+                    </div>
+                </el-form-item>
+                <el-form-item label="性别">
+                    <el-select v-model="editUser.gender" placeholder="请选择">
+                        <el-option v-for="gender in genderOptions" :key="gender.code" :label="gender.value" :value="gender.code"></el-option>
+                    </el-select>
+                </el-form-item>
+                <div align="right">
+                    <el-button type="primary" size="medium" @click="editType=='create' ? create() : update()">确定</el-button>
+                </div>
+            </el-form>
+        </el-dialog>
+    </div>
+</body>
+<script>
+    var instance = axios.create({
+        baseURL: 'http://localhost:8081/',
+        timeout: 1000,
+        headers: {'X-Custom-Header': 'foobar'}
+    });
+    const genderOptions = [{code: 1, value: '男'}, {code: 2, value: '女'}, {code: 3, value: '未知性别'}]
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            clientHight: document.documentElement.clientHeight,
+            tableHeight: document.documentElement.clientHeight - 180,
+            queryBean: {},
+            list: [],
+            total: 0,
+            pageNo: 1,
+            pageSize: 10,
+            editDialogVisible: false,
+            editType: '?',
+            editUser: {id: '123', name: 'lnbo', address: 'shui zhi dao'},
+            genderOptions: genderOptions
+        },
+        filters: {
+            // 性别格式化
+            genderFormat: function (code) {
+                let gender = genderOptions.filter((item) => {
+                    return item.code == code
+                })
+                return gender[0].value
+            }
+        },
+        watch: {
+            clientHight: function (nVal, oVal) {
+                this.caculateTableHight()
+            }
+        },
+        mounted () {
+            let _this = this
+            this.getListData()
+            window.onresize = function temp() {
+                return (() => {
+                    _this.clientHight = document.documentElement.clientHeight
+                })()
+            }
+            // this.caculateTableHight()
+            axios.default.baseURL = ''
+        },
+        methods: {
+            caculateTableHight () {
+                this.clientHeight = document.documentElement.clientHeight
+                this.tableHeight = this.clientHight - 180
+            },
+            getListData() {
+                let queryParams = '&id=' + this.getStringVal(this.queryBean.id) + '&name=' + this.getStringVal(this.queryBean.name) + '&gender=' + this.getStringVal(this.queryBean.gender)
+                axios.get('/users?pageNo=' + this.pageNo + '&pageSize=' + this.pageSize + queryParams)
+                    .then(response => {
+                        let pageData = response.data
+                        this.list = pageData.records
+                        this.total = pageData.total
+                    }).catch(error => {
+                        console.log(error)
+                    })
+            },
+            getStringVal (str) {
+                return (str) ? str : ''
+            },
+            handleAdd () {
+                this.editType = 'create'
+                this.editDialogVisible = true
+                this.editUser = {}
+            },
+            handleUpdate (record) {
+                this.editType = 'update'
+                this.editDialogVisible = true
+                this.editUser = record
+            },
+            handleDelete (id) {
+                axios.delete('/users/' + id)
+                    .then(response => {
+                        this.$message({type: 'success', message: '删除成功'})
+                        this.getListData()
+                    }).catch(error => {
+                        this.$message({type: 'error', message: error || '删除失败'})
+                    })
+            },
+            handleSizeChange (pageSize) {
+                this.pageSize = pageSize
+                this.getListData()
+            },
+            handleCurrentChange (pageNo) {
+                this.pageNo = pageNo
+                this.getListData()
+            },
+            create () {
+                axios.post('/users', this.editUser).then(response => {
+                    this.$message({type: 'success', message: '新增成功'})
+                    this.editDialogVisible = false
+                    this.getListData()
+                }).catch(error => {
+                    this.$message({type: 'error', message: error.msg || '新增失败'})
+                })
+            },
+            update () {
+                axios.put('/users/' + this.editUser.id, this.editUser).then(response => {
+                    this.$message({type: 'success', message: '更新成功'})
+                    this.editDialogVisible = false
+                    this.getListData()
+                }).catch(error => {
+                    this.$message({type: 'error', message: error.msg || '更新失败'})
+                })
+
+            }
+        }
+    })
+</script>
+</html>

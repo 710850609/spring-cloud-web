@@ -1,0 +1,20 @@
+server:
+  port: 10000
+
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    schema: classpath:/sql/schema.sql
+    data: classpath:/sql/data.sql
+    sql-script-encoding: UTF-8
+    url: jdbc:h2:mem:test
+    username: sa
+    password:
+
+mybatis-plus:
+  mapper-locations: classpath:/mybatis/**Mapper.xml
+  type-aliases-package: me.linbo.web.api.model.domain
+  global-config:
+    column-underline: true
+  configuration:
+    log-impl: org.apache.ibatis.logging.log4j2.Log4j2LoggerImpl
