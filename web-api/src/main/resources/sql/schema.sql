@@ -16,6 +16,6 @@ CREATE TABLE `account` (
   `error_login_count` int(2) DEFAULT NULL COMMENT '连续登录错误次数',
   `login_count` int(12) DEFAULT NULL COMMENT '登录次数',
   PRIMARY KEY (`id`),
-  KEY `mobile` (`mobile`),
-  KEY `uid` (`uid`)
+--   KEY `mobile` (`mobile`),
+--   KEY `uid` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

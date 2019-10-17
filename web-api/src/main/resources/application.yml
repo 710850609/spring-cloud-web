@@ -2,6 +2,9 @@ server:
   port: 10000
 
 spring:
+  cloud:
+    config:
+      fail-fast: false
   datasource:
     driver-class-name: org.h2.Driver
     schema: classpath:/sql/schema.sql
@@ -11,10 +14,18 @@ spring:
     username: sa
     password:
 
+# 官方配置说明 https://mp.baomidou.com/config
 mybatis-plus:
   mapper-locations: classpath:/mybatis/**Mapper.xml
   type-aliases-package: me.linbo.web.api.model.domain
-  global-config:
-    column-underline: true
   configuration:
-    log-impl: org.apache.ibatis.logging.log4j2.Log4j2LoggerImpl
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+
+logging:
+  level:
+    me:
+      linbo:
+        web:
+          demo:
+            mapper: debug
