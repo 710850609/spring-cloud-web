@@ -7,9 +7,10 @@ import lombok.Data;
  * @date 2019-10-17 14:13
  */
 @Data
-public class QueryDTO {
+public class BasePage {
 
-    private Integer pageNo;
+    private Long pageNo;
 
-    private Integer pageSize;
+    private Long pageSize;
+
 }

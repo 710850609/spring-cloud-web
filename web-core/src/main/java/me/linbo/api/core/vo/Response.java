@@ -33,7 +33,10 @@ public class Response<T> implements Serializable {
     }
 
     public static <T> Response<T> ok(T obj) {
-        return build(CODE_SUCCESS, null, obj);
+        return build(CODE_SUCCESS, "成功", obj);
+    }
+    public static Response ok() {
+        return ok(null);
     }
 
     public static <T> Response<T> error(BaseException e) {

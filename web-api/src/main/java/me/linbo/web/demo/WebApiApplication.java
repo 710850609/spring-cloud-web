@@ -10,7 +10,6 @@ import org.springframework.core.env.Environment;
 
 @SpringBootApplication
 @Slf4j
-@MapperScan(basePackages = "me.linbo.web.demo.mapper")
 public class WebApiApplication implements CommandLineRunner {
 
     public static void main(String[] args) {

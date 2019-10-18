@@ -13,6 +13,12 @@ spring:
     url: jdbc:h2:mem:test
     username: sa
     password:
+  h2:
+    console:
+      settings:
+        web-allow-others: true
+
+
 
 # 官方配置说明 https://mp.baomidou.com/config
 mybatis-plus:
@@ -20,7 +26,9 @@ mybatis-plus:
   type-aliases-package: me.linbo.web.api.model.domain
   configuration:
     map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  global-config:
+    db-config:
+      id-type: none
 
 logging:
   level:
