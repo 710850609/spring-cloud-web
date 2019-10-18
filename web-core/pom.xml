@@ -11,6 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>web-core</artifactId>
+    <description>适用每个项目,可被项目直接依赖使用</description>
 
     <dependencies>
         <dependency>

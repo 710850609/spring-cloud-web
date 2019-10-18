@@ -12,7 +12,7 @@
     <artifactId>web-common</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>web-common</name>
-    <description>Web common project for Spring Boot</description>
+    <description>通用服务,如消息推送/短信等</description>
 
     <dependencies>
         <dependency>

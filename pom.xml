@@ -25,7 +25,7 @@
 
     <modules>
         <module>web-core</module>
-        <module>web-gateway</module>
+        <!--<module>web-gateway</module>-->
         <module>web-common</module>
         <module>web-api</module>
     </modules>

@@ -1,8 +1,12 @@
 server:
   port: 10000
 
+
 spring:
   cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
     config:
       fail-fast: false
   datasource:
