@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/config")
-@RefreshScope
 public class ConfigApi {
 
     @Value("${useLocalCache:本地默认配置}")
     private String useLocalCache;
 
+    @RefreshScope
     @RequestMapping("/get")
     public String get() {
         return useLocalCache;

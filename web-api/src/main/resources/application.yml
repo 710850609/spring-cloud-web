@@ -1,7 +1,3 @@
-server:
-  port: 10000
-
-
 spring:
   cloud:
     nacos:
@@ -10,13 +6,19 @@ spring:
     config:
       fail-fast: false
   datasource:
-    driver-class-name: org.h2.Driver
-    schema: classpath:/sql/schema.sql
-    data: classpath:/sql/data.sql
-    sql-script-encoding: UTF-8
-    url: jdbc:h2:mem:test
-    username: sa
-    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/big_data?characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+    username: root
+    password: 123456
+
+#    driver-class-name: org.h2.Driver
+#    schema: classpath:/sql/schema.sql
+#    data: classpath:/sql/data.sql
+#    sql-script-encoding: UTF-8
+#    url: jdbc:h2:mem:test
+#    username: sa
+#    password:
+#    initialization-mode: always
   h2:
     console:
       settings:

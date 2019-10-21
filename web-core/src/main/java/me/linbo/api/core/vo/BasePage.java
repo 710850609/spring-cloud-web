@@ -9,8 +9,8 @@ import lombok.Data;
 @Data
 public class BasePage {
 
-    private Long pageNo;
+    private Long pageNo = 1L;
 
-    private Long pageSize;
+    private Long pageSize = 10L;
 
 }

@@ -7,8 +7,11 @@ import me.linbo.web.demo.mapper.AccountMapper;
 import me.linbo.web.demo.model.domain.Account;
 import me.linbo.web.demo.model.dto.AccountQueryDto;
 import me.linbo.web.demo.service.AccountService;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 /**
@@ -17,6 +20,9 @@ import java.util.List;
  */
 @Service
 public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> implements AccountService {
+
+    @Autowired
+    private DataSource dataSource;
 
     @Override
     public PageDto<Account> list(AccountQueryDto params) {
