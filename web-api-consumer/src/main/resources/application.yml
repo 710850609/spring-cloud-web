@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: web-api-consumer
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+feign:
+  okhttp:
+    enabled: false
+  hystrix:
+    enabled: true
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+
+logging:
+  level:
+    me:
+      linbo:
+        demo:
+          web:
+            api:
+              consumer:
+                service:
+                  others: debug
