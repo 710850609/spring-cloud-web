@@ -46,7 +46,8 @@ public class Response<T> implements Serializable {
         return response;
     }
 
-    public static <T> Response<T> error(Exception e) {
-        return build(CODE_SYSTEM_ERROR, "未知的异常" + e.getMessage(), null);
+    public static <T> Response<T> error(Throwable t) {
+        String msg = t.getMessage() == null ? "系统异常" : t.getMessage();
+        return build(CODE_SYSTEM_ERROR, msg, null);
     }
 }
