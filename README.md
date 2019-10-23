@@ -2,11 +2,14 @@
 spring cloud web project demo
 
 
+
 ## 一、配置服务
 [官方说明](https://cloud.spring.io/spring-cloud-config/reference/html/)
 ### 1、使用场景
 - 方便不同运行环境切换
 - 方便不同机器使用同一套配置，方便扩展服务
+
+项目选用阿里开源的 [Nacos](https://nacos.io/zh-cn/)，可从[GitHub](https://github.com/alibaba/nacos/releases)下载最新版本并运行。
 
 ## 二、微服务调用
 [spring-cloud-openfeign 使用说明](https://github.com/spring-cloud/spring-cloud-openfeign/blob/master/docs/src/main/asciidoc/spring-cloud-openfeign.adoc)  
