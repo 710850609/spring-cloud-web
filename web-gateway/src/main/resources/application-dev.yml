@@ -1,12 +1,4 @@
-server:
-  port: 10000
-
 spring:
-  application:
-    name: "@pom.artifactId@"
-  profiles:
-    active: "@profile.active.id@"
-
   redis:
     host: localhost
     port: 6379

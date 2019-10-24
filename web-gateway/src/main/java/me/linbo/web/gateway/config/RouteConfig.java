@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author LinBo
  * @date 2019-10-15 16:27
  */
-@Configuration
+//@Configuration
 public class RouteConfig {
 
     @Bean

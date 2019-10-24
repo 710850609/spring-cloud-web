@@ -1,3 +1,18 @@
+server:
+  port: 8080
+
 spring:
-  main:
-    allow-bean-definition-overriding: false
+#  application:
+#    name: '@pom.artifactId@'
+#  profiles:
+#    active: '@profile.active.id@'
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+
+management:
+  endpoints:
+    web:
+      exposure:
+        exclude: '*'

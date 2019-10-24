@@ -25,6 +25,18 @@ spring cloud web project demo
 ### 2、注意事项
 ```io.github.openfeign:feign-core``` 在```10.3.0```版本之前，不支持传入```@SpringQueryMap```修饰类种父类属性[BUG](https://github.com/OpenFeign/feign/pull/960)
     
+## 三、网关
+[spring-cloud-gateway 说明](https://cloud.spring.io/spring-cloud-gateway/reference/html/)
+    
+### 1、路由
+[路由](https://cloud.spring.io/spring-cloud-gateway/reference/html/#gateway-request-predicates-factories)
+
+### 2、限速
+[Redis RateLimiter](https://cloud.spring.io/spring-cloud-gateway/reference/html/#redis-ratelimiter)
+
+### 3、熔断
+[Hystrix Filter](https://cloud.spring.io/spring-cloud-gateway/reference/html/#hystrix)
+    
 网关
     鉴权
     路由权重
