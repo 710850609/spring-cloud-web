@@ -22,6 +22,8 @@ spring cloud web project demo
 | Feign | <p>简化HTTP API调用。直接面向java接口编程，http调用就像本地调用接口一样方便。</p><p>内置Ribbon作为客户端负载均衡。</p>内置Hystrix组件。 |
 | openfeign | 基于Feign的开发组件，是spring-cloud种的一个http客户端组件。支持基于SpringMVC注解的Feign接口定义。 |
    
+### 2、注意事项
+```io.github.openfeign:feign-core``` 在```10.3.0```版本之前，不支持传入```@SpringQueryMap```修饰类种父类属性[BUG](https://github.com/OpenFeign/feign/pull/960)
     
 网关
     鉴权

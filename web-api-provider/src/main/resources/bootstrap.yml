@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: web-api
+    name: web-api-provider
   cloud:
     nacos:
       config:

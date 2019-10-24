@@ -25,4 +25,5 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         page.setRecords(list);
         return PageDto.build(page);
     }
+
 }

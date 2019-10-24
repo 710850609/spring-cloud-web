@@ -1,0 +1,12 @@
+# GET请求
+curl -v "http://localhost:10001/accounts/restTemplate?pageNo=2&pageSize=2"
+curl -v "http://localhost:10001/accounts/openFeign?pageNo=2&pageSize=2"
+
+# POST请求
+curl -v -H "Content-Type:application/json;charset=UTF-8" -d "{\"name\":\"TEST\"}" "http://localhost:10001/accounts/openFeign"
+
+# PUT请求
+curl -v -X PUT -H "Content-Type:application/json;charset=UTF-8" -d "{\"name\":\"test_name\"}" "http://localhost:10001/accounts/openFeign/1001"
+
+# DELETE请求
+curl -v -X DELETE -H "Content-Type:application/json" "http://localhost:10001/accounts/openFeign/1001"

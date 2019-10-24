@@ -1,4 +1,4 @@
-package me.linbo.demo.web.api.consumer;
+package me.linbo.demo.web.consumer;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -9,11 +9,11 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableDiscoveryClient
 @EnableFeignClients
 @SpringBootApplication
-        (scanBasePackages = {"me.linbo.api.core.exception", "me.linbo.demo.web.api.consumer"})
-public class WebApiConsumerApplication implements CommandLineRunner {
+        (scanBasePackages = {"me.linbo.api.core.exception", "me.linbo.demo.web.consumer"})
+public class ConsumerApplication implements CommandLineRunner {
 
     public static void main(String[] args) {
-        SpringApplication.run(WebApiConsumerApplication.class, args);
+        SpringApplication.run(ConsumerApplication.class, args);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package me.linbo.demo.web.api.consumer.config;
+package me.linbo.demo.web.consumer.config;
 
 import feign.Contract;
 import feign.Logger;

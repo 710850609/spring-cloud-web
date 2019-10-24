@@ -12,10 +12,10 @@ import org.springframework.core.env.Environment;
 @EnableDiscoveryClient
 @SpringBootApplication
         (scanBasePackages = {"me.linbo.api.core.exception", "me.linbo.web.provider"})
-public class WebApiApplication implements CommandLineRunner {
+public class ProviderApplication implements CommandLineRunner {
 
     public static void main(String[] args) {
-        SpringApplication.run(WebApiApplication.class, args);
+        SpringApplication.run(ProviderApplication.class, args);
     }
 
     @Autowired

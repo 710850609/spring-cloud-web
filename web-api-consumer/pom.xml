@@ -41,11 +41,18 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
             <version>${spring-cloud-services.version}</version>
+            <exclusions>
+                <!-- 这里引用到10.1.0版本的feign-core, 存在bug -->
+                <exclusion>
+                    <groupId>io.github.openfeign</groupId>
+                    <artifactId>feign-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-okhttp</artifactId>
-            <version>${feign-okhttp.version}</version>
+            <version>${openfeign.version}</version>
         </dependency>
 
 

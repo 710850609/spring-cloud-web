@@ -1,20 +1,17 @@
-package me.linbo.demo.web.api.consumer.api;
+package me.linbo.demo.web.consumer.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import me.linbo.api.core.vo.PageDto;
 import me.linbo.api.core.vo.Response;
-import me.linbo.demo.web.api.consumer.model.Account;
-import me.linbo.demo.web.api.consumer.model.AccountQueryDto;
-import me.linbo.demo.web.api.consumer.service.others.AccountService;
+import me.linbo.demo.web.consumer.model.Account;
+import me.linbo.demo.web.consumer.model.AccountQueryDto;
+import me.linbo.demo.web.consumer.service.others.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
@@ -45,7 +42,7 @@ public class AccountApi {
         log.info("请求查询列表:{}", params);
         ObjectMapper mapper = new ObjectMapper();
         Map map = mapper.convertValue(params, Map.class);
-        ResponseEntity<Response> entity = restTemplate.getForEntity("http://web-api/accounts?pageNo={pageNo}&pageSize={pageSize}&id={id}", Response.class, map);
+        ResponseEntity<Response> entity = restTemplate.getForEntity("http://web-api-provider/accounts?pageNo={pageNo}&pageSize={pageSize}&id={id}", Response.class, map);
         return entity.getBody();
     }
 
@@ -59,5 +56,23 @@ public class AccountApi {
     public Response<Account> openFeign(@PathVariable("id") String id) {
         log.info("请求id查询: id={}", id);
         return accountService.getById(id);
+    }
+
+    @PostMapping("/openFeign")
+    public Response<Account> add(@RequestBody Account params) {
+        log.info("请求新增:{}", params);
+        return accountService.add(params);
+    }
+
+    @PutMapping("/openFeign/{id}")
+    public Response update(@PathVariable("id") Long id, @RequestBody Account params) {
+        log.info("请求更新: id={}, params={}", id, params);
+        return accountService.update(id, params);
+    }
+
+    @DeleteMapping("/openFeign/{id}")
+    public Response delete(@PathVariable("id")Long id) {
+        log.info("请求删除: id={}", id);
+        return accountService.delete(id);
     }
 }

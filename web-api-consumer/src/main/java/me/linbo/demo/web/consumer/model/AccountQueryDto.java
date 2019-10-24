@@ -1,4 +1,4 @@
-package me.linbo.demo.web.api.consumer.model;
+package me.linbo.demo.web.consumer.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

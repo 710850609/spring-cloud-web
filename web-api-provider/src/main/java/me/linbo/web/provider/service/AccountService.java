@@ -20,4 +20,5 @@ public interface AccountService extends IService<Account> {
      * @return {@link Page< Account>}
      **/
     PageDto<Account> list(AccountQueryDto params);
+
 }
