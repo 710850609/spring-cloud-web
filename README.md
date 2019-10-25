@@ -31,11 +31,14 @@ spring cloud web project demo
 ### 1、路由
 [路由](https://cloud.spring.io/spring-cloud-gateway/reference/html/#gateway-request-predicates-factories)
 
-### 2、限速
+### 2、限流
 [Redis RateLimiter](https://cloud.spring.io/spring-cloud-gateway/reference/html/#redis-ratelimiter)
 
 ### 3、熔断
 [Hystrix Filter](https://cloud.spring.io/spring-cloud-gateway/reference/html/#hystrix)
+ 
+### 4、跨越请求
+[CORS配置](https://cloud.spring.io/spring-cloud-gateway/reference/html/#cors-configuration)
     
 网关
     鉴权

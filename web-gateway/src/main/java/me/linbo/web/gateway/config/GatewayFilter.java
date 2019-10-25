@@ -17,3 +17,4 @@ public class GatewayFilter implements org.springframework.cloud.gateway.filter.G
         return exchange.getResponse().setComplete();
     }
 }
+

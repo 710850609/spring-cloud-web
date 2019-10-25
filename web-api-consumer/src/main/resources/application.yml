@@ -23,4 +23,4 @@ logging:
           web:
               consumer:
                 service:
-                  others: trace
+                  others: error

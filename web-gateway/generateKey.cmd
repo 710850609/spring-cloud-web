@@ -1,0 +1,1 @@
+keytool -genkey -alias webServer -keystore ./src/main/resources/webServer.p12 -storetype PKCS12 -keyalg RSA -keysize 2048 -validity 365 -dname "CN=linbo, OU=Unknown, O=Unknown, L=GuangZhou, ST=GuangDong, C=CN"

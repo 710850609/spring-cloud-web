@@ -1,9 +1,17 @@
 server:
   port: 8080
+  ssl:
+    enabled: true
+    key-alias: webServer
+    key-password: 123456
+    key-store: classpath:webServer.p12
+    key-store-type: PKCS12
+#    key-store-password: 123456
+#    ciphers: TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256,TLS_RSA_WITH_AES_256_CBC_SHA256
 
 spring:
-#  application:
-#    name: '@pom.artifactId@'
+  application:
+    name: web-gateway
 #  profiles:
 #    active: '@profile.active.id@'
   cloud:
@@ -12,6 +20,9 @@ spring:
         server-addr: localhost:8848
 
 management:
+  endpoint:
+    gateway:
+      enabled: true
   endpoints:
     web:
       exposure:
