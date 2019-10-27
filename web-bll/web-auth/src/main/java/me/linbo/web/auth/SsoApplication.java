@@ -9,10 +9,10 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @EnableOAuth2Sso
 @EnableWebSecurity
 @SpringBootApplication
-public class SsoApplication {
+public class AuthApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SsoApplication.class, args);
+		SpringApplication.run(AuthApplication.class, args);
 	}
 
 }
