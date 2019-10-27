@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <title>别看了，没有标题</title>
     <!-- 引入样式 -->
-    <link rel="stylesheet" href="/css/element-ui@2.4.9.css">
+    <link rel="stylesheet" href="./css/element-ui@2.4.9.css">
     <!-- 引入组件库 -->
-    <script src="/js/vue.min.js"></script>
-    <script src="/js/element-ui@2.4.9.js"></script>
-    <script src="/js/axios.min.js"></script>
+    <script src="./js/vue.min.js"></script>
+    <script src="./js/element-ui@2.4.9.js"></script>
+    <script src="./js/axios.min.js"></script>
 
 </head>
 <body>
@@ -180,7 +180,7 @@
             },
             getListData() {
                 let queryParams = '&id=' + this.getStringVal(this.queryBean.id) + '&name=' + this.getStringVal(this.queryBean.name) + '&gender=' + this.getStringVal(this.queryBean.gender)
-                axios.get('/accounts?pageNo=' + this.pageNo + '&pageSize=' + this.pageSize + queryParams)
+                axios.get('accounts?pageNo=' + this.pageNo + '&pageSize=' + this.pageSize + queryParams)
                     .then(response => {
                         let pageData = response.data.data
                         this.list = pageData.records
@@ -203,7 +203,7 @@
                 this.editUser = record
             },
             handleDelete (id) {
-                axios.delete('/accounts/' + id)
+                axios.delete('accounts/' + id)
                     .then(response => {
                         this.$message({type: 'success', message: '删除成功'})
                         this.getListData()
@@ -220,7 +220,7 @@
                 this.getListData()
             },
             create () {
-                axios.post('/accounts', this.editUser).then(response => {
+                axios.post('accounts', this.editUser).then(response => {
                     this.$message({type: 'success', message: '新增成功'})
                     this.editDialogVisible = false
                     this.getListData()
@@ -229,7 +229,7 @@
                 })
             },
             update () {
-                axios.put('/accounts/' + this.editUser.id, this.editUser).then(response => {
+                axios.put('accounts/' + this.editUser.id, this.editUser).then(response => {
                     this.$message({type: 'success', message: '更新成功'})
                     this.editDialogVisible = false
                     this.getListData()

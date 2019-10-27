@@ -39,7 +39,14 @@ spring cloud web project demo
  
 ### 4、跨越请求
 [CORS配置](https://cloud.spring.io/spring-cloud-gateway/reference/html/#cors-configuration)
-    
+ 
+### 5、  
+
+
+### 四、认证授权
+https://www.cnblogs.com/bigben0123/p/9207825.html
+https://www.jianshu.com/p/4089c9cc2dfd
+  
 网关
     鉴权
     路由权重
@@ -54,7 +61,7 @@ spring cloud web project demo
 
 用户服务
 
-认证授权服务
+
 
 推送服务
 
