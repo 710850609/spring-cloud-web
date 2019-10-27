@@ -1,0 +1,16 @@
+server:
+  port: 10002
+
+security:
+  oauth2:
+    sso:
+      loginPath: /login
+
+spring:
+  security:
+    oath2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:10000/oauth2/keys
+
+
