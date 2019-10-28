@@ -2,15 +2,26 @@ server:
   port: 10002
 
 security:
+  user:
+
   oauth2:
     sso:
       loginPath: /login
 
+#spring:
+#  security:
+#    oath2:
+#      resourceserver:
+#        jwt:
+#          jwk-set-uri: http://localhost:10000/oauth2/keys
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+
 spring:
   security:
-    oath2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: http://localhost:10000/oauth2/keys
-
-
+    user:
+      name: user
+      password: 123

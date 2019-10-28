@@ -6,9 +6,7 @@ import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 
-@EnableOAuth2Sso
-@EnableWebSecurity
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"me.linbo.web.auth", "me.linbo.api.core.exception"})
 public class AuthApplication {
 
 	public static void main(String[] args) {

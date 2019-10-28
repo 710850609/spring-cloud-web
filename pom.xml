@@ -10,7 +10,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>me.linbo.web</groupId>
-    <artifactId>spring-cloud-web</artifactId>
+    <artifactId>spring-cloud-web</artifactId>UserDetails
     <version>0.0.1-SNAPSHOT</version>
     <name>spring-boot-web</name>
     <description>web project for Spring Boot</description>
@@ -26,6 +26,7 @@
         <spring-cloud-services.version>2.1.3.RELEASE</spring-cloud-services.version>
         <spring-cloud-nacos.version>0.9.0.RELEASE</spring-cloud-nacos.version>
         <openfeign.version>10.5.1</openfeign.version>
+        <jjwt.version>0.9.1</jjwt.version>
     </properties>
 
     <modules>
