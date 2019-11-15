@@ -1,4 +1,7 @@
-package me.linbo.web.common.serialNum;
+package me.linbo.web.common.id.impl;
+
+
+import me.linbo.web.common.id.IdGenerator;
 
 /**
  * Twitter的雪花算法实现

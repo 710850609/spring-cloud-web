@@ -1,6 +1,7 @@
 package me.linbo.web.common.serialNum;
 
 
+import me.linbo.web.common.id.impl.SnowFlakeGenerator;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -26,6 +27,7 @@ public class SnowFlakeGeneratorTest {
     @Test
     public void next() {
         SnowFlakeGenerator gen = new SnowFlakeGenerator(1, 3);
+        System.out.println(gen.next());
         long startTime = System.currentTimeMillis();
         Set<Long> result = new HashSet<>();
         int i = 8;

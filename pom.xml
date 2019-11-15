@@ -10,7 +10,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>me.linbo.web</groupId>
-    <artifactId>spring-cloud-web</artifactId>UserDetails
+    <artifactId>spring-cloud-web</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>spring-boot-web</name>
     <description>web project for Spring Boot</description>
@@ -31,7 +31,7 @@
 
     <modules>
         <module>web-core</module>
-        <!--<module>web-common</module>-->
+        <module>web-common</module>
         <module>web-api-provider</module>
         <module>web-api-consumer</module>
         <module>web-gateway</module>

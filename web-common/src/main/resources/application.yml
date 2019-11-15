@@ -1,0 +1,9 @@
+server:
+  port: 18080
+
+
+spring:
+  cloud:
+    zookeeper:
+      enabled: true
+      connect-string: localhost:2181

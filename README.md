@@ -44,6 +44,11 @@ spring cloud web project demo
 
 
 ### 四、认证授权
+#### 1、名词解释
+- 资源服务
+- 认证服务
+
+
 https://www.cnblogs.com/bigben0123/p/9207825.html
 https://www.jianshu.com/p/4089c9cc2dfd
   

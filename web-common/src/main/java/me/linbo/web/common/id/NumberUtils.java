@@ -1,4 +1,6 @@
-package me.linbo.web.common.serialNum;
+package me.linbo.web.common.id;
+
+import me.linbo.web.common.id.impl.SnowFlakeGenerator;
 
 /**
  * @author LinBo
