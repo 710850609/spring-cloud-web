@@ -7,13 +7,11 @@ package me.linbo.web.common.lock;
  */
 public interface IDistributedLock {
 
-    void lock() ;
-
-    void lockInterruptibly() throws InterruptedException ;
+    void lock() throws DistributedLockException;
 
     boolean tryLock();
 
-    boolean tryLock(long timeout) throws Exception ;
+    boolean tryLock(long timeout) throws DistributedLockException ;
 
-    void unlock() ;
+    void unlock() throws DistributedLockException;
 }

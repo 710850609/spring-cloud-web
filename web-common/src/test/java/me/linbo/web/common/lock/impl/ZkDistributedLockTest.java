@@ -1,5 +1,6 @@
 package me.linbo.web.common.lock.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,14 +8,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Slf4j
 public class ZkDistributedLockTest {
 
     @Autowired
@@ -22,32 +22,28 @@ public class ZkDistributedLockTest {
 
     @Test
     public void lock() {
-    }
-
-    @Test
-    public void lockInterruptibly() {
-    }
-
-    @Test
-    public void tryLock() {
-        int count = 5;
+        int count = 10;
 
         ExecutorService executor = Executors.newFixedThreadPool(8);
         ArrayList<Future> task = new ArrayList<>(count);
         while (count-- > 0) {
             int finalCount = count;
             task.add(executor.submit(() -> {
+                boolean isLock = true;
                 try {
                     lock.lock();
-                    System.out.println(finalCount + "上锁:" + Thread.currentThread().getName());
+//                    isLock = lock.tryLock();
+                    log.info(finalCount + "上锁:" + Thread.currentThread().getName());
                     try {
-                        Thread.sleep(60000L);
+                        Thread.sleep(3000L);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 } finally {
-                    lock.unlock();
-                    System.out.println(finalCount + "解锁:" + Thread.currentThread().getName());
+                    if (isLock) {
+                        log.info(finalCount + "解锁:" + Thread.currentThread().getName());
+                        lock.unlock();
+                    }
                 }
             }));
         }
@@ -61,12 +57,4 @@ public class ZkDistributedLockTest {
         });
     }
 
-    @Test
-    public void testTryLock() throws Exception {
-        lock.tryLock(500L);
-    }
-
-    @Test
-    public void unlock() {
-    }
 }
