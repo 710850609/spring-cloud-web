@@ -12,7 +12,7 @@ public class OrderZkLock extends ZkDistributedLock {
     private static final String LOCK_PATH = "/orders";
 
     @Override
-    String getLockPath() {
+    public String getLockPath() {
         return LOCK_PATH;
     }
 }

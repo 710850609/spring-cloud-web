@@ -5,7 +5,7 @@ package me.linbo.web.common.id;
  * @date 2019-10-12 16:52
  */
 @FunctionalInterface
-public interface IdGenerator<T> {
+public interface ISequence<T> {
 
     /**
      * 产生下一个id

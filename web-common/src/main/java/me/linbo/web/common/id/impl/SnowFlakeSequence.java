@@ -1,7 +1,6 @@
 package me.linbo.web.common.id.impl;
 
-
-import me.linbo.web.common.id.IdGenerator;
+import me.linbo.web.common.id.ISequence;
 
 /**
  * Twitter的雪花算法实现
@@ -11,7 +10,7 @@ import me.linbo.web.common.id.IdGenerator;
  * @author LinBo
  * @date 2019-10-12 16:53
  */
-public class SnowFlakeGenerator implements IdGenerator<Long> {
+public class SnowFlakeSequence implements ISequence<Long> {
 
     /**
      * 产生下一个ID
@@ -85,7 +84,7 @@ public class SnowFlakeGenerator implements IdGenerator<Long> {
      * @param datacenterId 数据节点标识ID
      * @param machineId 机器标识ID
      */
-    public SnowFlakeGenerator(long datacenterId, long machineId) {
+    public SnowFlakeSequence(long datacenterId, long machineId) {
         if (datacenterId > MAX_DATACENTER_NUM || datacenterId < 0) {
             throw new IllegalArgumentException("dataCenterId can't be greater than " + MAX_DATACENTER_NUM + " or less than 0");
         }

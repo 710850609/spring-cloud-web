@@ -37,7 +37,7 @@ public abstract class ZkDistributedLock implements IDistributedLock {
      * @Date 2019-11-18 14:41
      * @return {@link String}
      **/
-    abstract String getLockPath();
+    public abstract String getLockPath();
 
     @PostConstruct
     public void init() {

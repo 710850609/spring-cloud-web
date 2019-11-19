@@ -7,3 +7,9 @@ spring:
     zookeeper:
       enabled: true
       connect-string: localhost:2181
+logging:
+  level:
+    me:
+      linbo:
+        web:
+          common: info
