@@ -1,10 +1,11 @@
-package me.linbo.web.common.id;
+package me.linbo.web.common.sequence;
 
-import me.linbo.web.common.id.impl.SnowFlakeSequence;
-import me.linbo.web.common.id.impl.ZookeeperSequence;
-import me.linbo.web.common.id.impl.ZookeeperSequencePro;
+import me.linbo.web.common.sequence.impl.SnowFlakeSequence;
+import me.linbo.web.common.sequence.impl.ZookeeperSequence;
+import me.linbo.web.common.sequence.impl.ZookeeperSequencePro;
 
 /**
+ * 分布式序列维护入口
  * @author LinBo
  * @date 2019-10-15 11:22
  */

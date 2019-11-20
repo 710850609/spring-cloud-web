@@ -1,4 +1,4 @@
-package me.linbo.web.common.id;
+package me.linbo.web.common.sequence;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;

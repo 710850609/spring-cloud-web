@@ -1,13 +1,12 @@
-package me.linbo.web.common.id.impl;
+package me.linbo.web.common.sequence.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import me.linbo.web.common.id.DistributedSequenceException;
-import me.linbo.web.common.id.ISequence;
+import me.linbo.web.common.sequence.DistributedSequenceException;
+import me.linbo.web.common.sequence.ISequence;
 import me.linbo.web.common.spring.SpringContextHolder;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.recipes.locks.InterProcessLock;
-import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.apache.curator.framework.recipes.locks.InterProcessSemaphoreMutex;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.logging.log4j.util.Strings;

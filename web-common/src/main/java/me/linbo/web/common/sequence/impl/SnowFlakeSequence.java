@@ -1,6 +1,6 @@
-package me.linbo.web.common.id.impl;
+package me.linbo.web.common.sequence.impl;
 
-import me.linbo.web.common.id.ISequence;
+import me.linbo.web.common.sequence.ISequence;
 
 /**
  * Twitter的雪花算法实现

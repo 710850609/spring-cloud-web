@@ -1,15 +1,14 @@
-package me.linbo.web.common.id.impl;
+package me.linbo.web.common.sequence.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import me.linbo.web.common.id.ISequence;
 import me.linbo.web.common.lock.DistributedLockException;
+import me.linbo.web.common.sequence.ISequence;
 import me.linbo.web.common.spring.SpringContextHolder;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.logging.log4j.util.Strings;
 import org.apache.zookeeper.CreateMode;
-import org.apache.zookeeper.data.Stat;
 import org.springframework.cloud.zookeeper.ZookeeperProperties;
 import org.springframework.util.Assert;
 

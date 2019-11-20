@@ -1,4 +1,4 @@
-package me.linbo.web.common.id;
+package me.linbo.web.common.sequence;
 
 /**
  * @author LinBo
