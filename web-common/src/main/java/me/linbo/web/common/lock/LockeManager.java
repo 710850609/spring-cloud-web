@@ -8,11 +8,6 @@ import me.linbo.web.common.lock.impl.ZkDistributedLock;
  */
 public class LockeManager {
 
-    private static final ZkDistributedLock ZK_ORDER_NO = new ZkDistributedLock() {
-        @Override
-        public String getLockPath() {
-            return null;
-        }
-    };
+    public static final ZkDistributedLock ZK_ORDER_NO = new ZkDistributedLock("order-no");
 
 }

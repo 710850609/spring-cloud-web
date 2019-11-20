@@ -9,6 +9,7 @@ import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.logging.log4j.util.Strings;
 import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.data.Stat;
 import org.springframework.cloud.zookeeper.ZookeeperProperties;
 import org.springframework.util.Assert;
 
@@ -26,9 +27,9 @@ import java.util.concurrent.Executors;
 public class ZookeeperSequence implements ISequence<Long> {
 
     /** zk锁命根路径 */
-    private static final String ZK_ID_ROOT_PATH = "concurrent-id";
+    private static final String ZK_ID_ROOT_PATH = "concurrent/sequence";
     /** zk有序节点前缀 */
-    private static final String Z_NODE_PREFIX = "seq-";
+    private static final String Z_NODE_PREFIX = "0";
     /** zk有序节点名称 */
     private String zNodeName;
 
@@ -42,44 +43,7 @@ public class ZookeeperSequence implements ISequence<Long> {
     public ZookeeperSequence(String nodeName) {
         Assert.isTrue(Strings.isNotBlank(nodeName), "zookeeper节点名称不能为空");
         this.zNodeName = "/" + nodeName;
-    }
-
-    @Override
-    public Long next() {
-        try {
-            if (client == null) {
-                synchronized (this) {
-                    init();
-                }
-            }
-            String prefixPath = this.zNodeName + "/" + Z_NODE_PREFIX;
-            String path = client.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT_SEQUENTIAL)
-                    .forPath(prefixPath, "1".getBytes());
-            log.trace("生成节点： {}", path);
-            String numStr = path.substring(prefixPath.length());
-            Long num = Long.valueOf(numStr);
-
-            // 删除先前节点
-            FIXED_THREAD_POOL.submit(() -> {
-                try {
-                    List<String> paths = client.getChildren().forPath(this.zNodeName);
-                    for (String p : paths) {
-                        if (num > Long.valueOf(p.substring(Z_NODE_PREFIX.length()))) {
-                            log.trace("{} 删除节点： {}/{}", path, this.zNodeName, p);
-                            client.delete().forPath(this.zNodeName + "/" + p);
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    log.error("删除zookeeper序列节点失败", e);
-                }
-            });
-            return num;
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("zookeeper生成分布式id异常", e);
-            throw new DistributedLockException(e);
-        }
+        init();
     }
 
     private void init() {
@@ -98,9 +62,46 @@ public class ZookeeperSequence implements ISequence<Long> {
         try {
             // 跳过0值，后续从1开始
             client.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT_SEQUENTIAL)
-                    .forPath(prefixPath, "1".getBytes());
+                    .forPath(prefixPath, "0".getBytes());
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Long next() {
+        try {
+            if (client == null) {
+                synchronized (this) {
+                    init();
+                }
+            }
+            String prefixPath = this.zNodeName + "/" + Z_NODE_PREFIX;
+            String path = client.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT_SEQUENTIAL)
+                    .forPath(prefixPath, "0".getBytes());
+            String numStr = path.substring(prefixPath.length());
+            Long num = Long.valueOf(numStr);
+
+            // 删除先前节点
+            FIXED_THREAD_POOL.submit(() -> {
+                try {
+                    List<String> paths = client.getChildren().forPath(this.zNodeName);
+                    for (String p : paths) {
+                        if (p.indexOf(Z_NODE_PREFIX) == 0 && num > Long.valueOf(p)) {
+                            log.trace("{} 删除节点： {}/{}", path, this.zNodeName, p);
+                            client.delete().forPath(this.zNodeName + "/" + p);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.error("删除zookeeper序列节点失败", e);
+                }
+            });
+            return num;
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("zookeeper生成分布式id异常", e);
+            throw new DistributedLockException(e);
         }
     }
 

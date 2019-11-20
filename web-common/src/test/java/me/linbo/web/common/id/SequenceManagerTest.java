@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,8 +26,7 @@ public class SequenceManagerTest {
     @Test
     public void testZkpRro() throws InterruptedException {
         testBase(SequenceManager.ZK_PRO_ORDER_NO);
-        // 线程等待异步删除zk节点
-        Thread.sleep(60000L);
+        Thread.sleep(10000L);
     }
 
     @Test
@@ -39,7 +37,7 @@ public class SequenceManagerTest {
     private void testBase(ISequence<Long> sequence) throws InterruptedException {
         int processors = Runtime.getRuntime().availableProcessors();
         int count = processors;
-        long seconds = 10;
+        long seconds = 1;
         ExecutorService executor = Executors.newFixedThreadPool(count);
         long startTime = System.currentTimeMillis();
         AtomicLong total = new AtomicLong();
@@ -58,11 +56,16 @@ public class SequenceManagerTest {
         }
         countDownLatch.await();
         if (total.get() > 10000) {
-            log.info("{} 秒，{} 线程，生成序列值 {} 个", seconds, processors, (total.get()));
-            log.info("平均单线程1秒产生序列值 {} 个", total.get() / seconds / processors);
+            log.info("{} 秒，{} 线程，生成序列值 {} w个", seconds, processors, (total.get() / 10000));
         } else {
             log.info("{} 秒，{} 线程，生成序列值 {} 个", seconds, processors, (total.get()));
+        }
+        if (total.get() / seconds / processors > 10000) {
+            log.info("平均单线程1秒产生序列值 {} w个", total.get() / seconds / processors / 10000);
+        } else {
             log.info("平均单线程1秒产生序列值 {} 个", total.get() / seconds / processors);
         }
+
     }
+
 }

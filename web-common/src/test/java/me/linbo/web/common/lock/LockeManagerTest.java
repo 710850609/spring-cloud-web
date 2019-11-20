@@ -1,9 +1,9 @@
-package me.linbo.web.common.lock.impl;
+package me.linbo.web.common.lock;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -15,15 +15,18 @@ import java.util.concurrent.Future;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Slf4j
-public class ZkDistributedLockTest {
+public class LockeManagerTest {
 
-    @Autowired
-    private OrderZkLock lock;
+    private IDistributedLock lock;
+
+    @Before
+    public void doBefore() {
+        lock = LockeManager.ZK_ORDER_NO;
+    }
 
     @Test
     public void lock() {
         int count = 10;
-
         ExecutorService executor = Executors.newFixedThreadPool(8);
         ArrayList<Future> task = new ArrayList<>(count);
         while (count-- > 0) {
@@ -56,5 +59,4 @@ public class ZkDistributedLockTest {
             }
         });
     }
-
 }

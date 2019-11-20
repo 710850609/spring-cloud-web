@@ -3,15 +3,13 @@ package me.linbo.web.common.lock.impl;
 import lombok.extern.slf4j.Slf4j;
 import me.linbo.web.common.lock.DistributedLockException;
 import me.linbo.web.common.lock.IDistributedLock;
+import me.linbo.web.common.spring.SpringContextHolder;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.apache.curator.retry.ExponentialBackoffRetry;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.zookeeper.ZookeeperProperties;
 
-import javax.annotation.PostConstruct;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -19,29 +17,24 @@ import java.util.concurrent.TimeUnit;
  * @date 2019-11-12 10:01
  */
 @Slf4j
-public abstract class ZkDistributedLock implements IDistributedLock {
-
-    @Autowired
-    private ZookeeperProperties zookeeperProperties;
-
-    private InterProcessMutex lock;
+public class ZkDistributedLock implements IDistributedLock {
 
     /** zookeeper锁命名空间名称 */
-    private static final String ZK_LOCK_NAME_SPACE = "concurrent-locks";
+    private static final String ZK_LOCK_NAME_SPACE = "concurrent/locks";
     /** 默认获取锁超时时间 */
     private static final long DEFAULT_TIMEOUT = 3_000;
 
-    /**
-     * 设置锁路径，这里以业务模块命名，如： /orders
-     * @Author LinBo
-     * @Date 2019-11-18 14:41
-     * @return {@link String}
-     **/
-    public abstract String getLockPath();
+    private InterProcessMutex lock;
 
-    @PostConstruct
-    public void init() {
-        Objects.requireNonNull(zookeeperProperties);
+    private String zNodeName;
+
+    public ZkDistributedLock(String zNodeName) {
+        this.zNodeName = "/" + zNodeName;
+        init();
+    }
+
+    private void init() {
+        ZookeeperProperties zookeeperProperties = SpringContextHolder.getBean(ZookeeperProperties.class);
         ExponentialBackoffRetry retryPolicy = new ExponentialBackoffRetry(zookeeperProperties.getBaseSleepTimeMs(),
                 zookeeperProperties.getMaxRetries(),
                 zookeeperProperties.getMaxSleepMs());
@@ -51,9 +44,9 @@ public abstract class ZkDistributedLock implements IDistributedLock {
                 .retryPolicy(retryPolicy)
                 .build();
         client.start();
-        String lockPath = getLockPath();
-        this.lock = new InterProcessMutex(client, lockPath);
-        log.info("初始化分布式锁: " + ZK_LOCK_NAME_SPACE + getLockPath());
+        // 创建可重入互斥锁
+        this.lock = new InterProcessMutex(client, this.zNodeName);
+        log.info("初始化分布式锁: /{}{}", ZK_LOCK_NAME_SPACE, this.zNodeName);
     }
 
     @Override
