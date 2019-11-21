@@ -28,8 +28,8 @@ public class ZkDistributedLock implements IDistributedLock {
 
     private String zNodeName;
 
-    public ZkDistributedLock(String zNodeName) {
-        this.zNodeName = "/" + zNodeName;
+    public ZkDistributedLock(String lockName) {
+        this.zNodeName = "/" + lockName;
         init();
     }
 
@@ -46,7 +46,7 @@ public class ZkDistributedLock implements IDistributedLock {
         client.start();
         // 创建可重入互斥锁
         this.lock = new InterProcessMutex(client, this.zNodeName);
-        log.info("初始化分布式锁: /{}{}", ZK_LOCK_NAME_SPACE, this.zNodeName);
+        log.info("初始化zookeeper分布式锁: /{}{}", ZK_LOCK_NAME_SPACE, this.zNodeName);
     }
 
     @Override

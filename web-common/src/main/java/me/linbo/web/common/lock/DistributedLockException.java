@@ -6,6 +6,10 @@ package me.linbo.web.common.lock;
  */
 public class DistributedLockException extends RuntimeException {
 
+    public DistributedLockException(String message) {
+        super(message);
+    }
+
     public DistributedLockException(Exception e) {
         super(e);
     }

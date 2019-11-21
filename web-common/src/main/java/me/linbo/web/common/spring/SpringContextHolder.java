@@ -23,6 +23,14 @@ public class SpringContextHolder implements ApplicationContextAware {
         return context.getBean(clazz);
     }
 
+    public static <T> T getBean(Class<T> clazz, String beanName) {
+        Objects.requireNonNull(context, "为注入Spring Context");
+        if (beanName == null || beanName.isEmpty()) {
+            return getBean(clazz);
+        }
+        return context.getBean(beanName, clazz);
+    }
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         context = applicationContext;
