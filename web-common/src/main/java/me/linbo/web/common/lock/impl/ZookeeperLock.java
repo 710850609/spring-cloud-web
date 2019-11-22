@@ -17,18 +17,16 @@ import java.util.concurrent.TimeUnit;
  * @date 2019-11-12 10:01
  */
 @Slf4j
-public class ZkDistributedLock implements IDistributedLock {
+public class ZookeeperLock implements IDistributedLock {
 
     /** zookeeper锁命名空间名称 */
     private static final String ZK_LOCK_NAME_SPACE = "concurrent/locks";
-    /** 默认获取锁超时时间 */
-    private static final long DEFAULT_TIMEOUT = 3_000;
 
     private InterProcessMutex lock;
 
     private String zNodeName;
 
-    public ZkDistributedLock(String lockName) {
+    public ZookeeperLock(String lockName) {
         this.zNodeName = "/" + lockName;
         init();
     }

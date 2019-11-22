@@ -18,3 +18,6 @@ logging:
       linbo:
         web:
           common: info
+    org:
+      redisson:
+        command: info

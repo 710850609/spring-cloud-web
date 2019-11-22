@@ -35,6 +35,16 @@ public class SequenceManagerTest {
     }
 
     @Test
+    public void testRedis() throws Exception {
+        testBase(SequenceManager.REDIS_ORDER_NO);
+    }
+
+    @Test
+    public void testRedisCache() throws Exception {
+        testBase(SequenceManager.REDIS_CACHE_ORDER_NO);
+    }
+
+    @Test
     public void testSf() throws Exception {
         testBase(SequenceManager.SF_ORDER_NO);
     }
@@ -42,7 +52,7 @@ public class SequenceManagerTest {
     private void testBase(ISequence<Long> sequence) throws Exception {
         int processors = Runtime.getRuntime().availableProcessors();
         int count = processors;
-        long seconds = 1;
+        long seconds = 10;
         ExecutorService executor = Executors.newFixedThreadPool(count);
         long startTime = System.currentTimeMillis();
         long endTime = startTime + seconds * 1000;

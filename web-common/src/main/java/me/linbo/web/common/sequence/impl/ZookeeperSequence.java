@@ -1,7 +1,7 @@
 package me.linbo.web.common.sequence.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import me.linbo.web.common.lock.DistributedLockException;
+import me.linbo.web.common.sequence.DistributedSequenceException;
 import me.linbo.web.common.sequence.ISequence;
 import me.linbo.web.common.spring.SpringContextHolder;
 import org.apache.curator.framework.CuratorFramework;
@@ -100,7 +100,7 @@ public class ZookeeperSequence implements ISequence<Long> {
         } catch (Exception e) {
             e.printStackTrace();
             log.error("zookeeper生成分布式id异常", e);
-            throw new DistributedLockException(e);
+            throw new DistributedSequenceException(e);
         }
     }
 

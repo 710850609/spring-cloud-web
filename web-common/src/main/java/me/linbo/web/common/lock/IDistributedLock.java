@@ -9,7 +9,7 @@ package me.linbo.web.common.lock;
 public interface IDistributedLock {
 
     /** 默认超时时间，如果超过超时时间，没有主动释放锁，该锁会自动释放 */
-    long DEFAULT_TIMEOUT = 3000L;
+    long DEFAULT_TIMEOUT = 3_000L;
 
     /**
      * 上锁

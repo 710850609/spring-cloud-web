@@ -1,7 +1,6 @@
 package me.linbo.web.common.lock;
 
 import lombok.extern.slf4j.Slf4j;
-import me.linbo.web.common.lock.impl.ZkDistributedLock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,13 +25,11 @@ public class LockeManagerTest {
         testLock(lock);
     }
 
-
     @Test
     public void testRedisLock() {
         IDistributedLock lock = LockeManager.REDIS_ORDER_NO;
         testLock(lock);
     }
-
 
     @Test
     public void testZkLockPerformance() {
@@ -42,7 +39,10 @@ public class LockeManagerTest {
         testLockPerformance(LockeManager.ZK_ORDER_NO);
     }
 
-
+    @Test
+    public void testRedisLockPerformance() {
+        testLockPerformance(LockeManager.REDIS_ORDER_NO);
+    }
 
     private void testLock(IDistributedLock lock) {
         int count = 10;
@@ -58,7 +58,7 @@ public class LockeManagerTest {
                     log.info(finalCount + "上锁成功:" + Thread.currentThread().getName());
                     isLock = true;
                     try {
-                        Thread.sleep(IDistributedLock.DEFAULT_TIMEOUT - 200);
+                        Thread.sleep(IDistributedLock.DEFAULT_TIMEOUT - 300);
                     } catch (InterruptedException e){}
                 } finally {
                     if (isLock) {
@@ -78,7 +78,7 @@ public class LockeManagerTest {
     }
 
     private void testLockPerformance(IDistributedLock lock) {
-        long seconds = 1;
+        long seconds = 10;
         long startTime = System.currentTimeMillis();
         long endTime = startTime + seconds * 1000;
         int total = 0;

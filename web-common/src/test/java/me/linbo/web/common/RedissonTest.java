@@ -3,18 +3,24 @@ package me.linbo.web.common;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.redisson.Redisson;
+import org.redisson.api.RAtomicLong;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.concurrent.*;
 
 /**
  * @author LinBo
  * @date 2019-11-21 15:33
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 @Slf4j
 public class RedissonTest {
 
@@ -75,4 +81,32 @@ public class RedissonTest {
         log.info("尝试解锁");
         lock.unlock();
     }
+
+    @Test
+    public void testRAtomicLongPerformance() throws ExecutionException, InterruptedException {
+        int seconds = 10;
+        int processors = Runtime.getRuntime().availableProcessors();
+        RAtomicLong atomicLong = redisson.getAtomicLong("test:sequence:RAtomicLong-no");
+        ExecutorService executor = Executors.newFixedThreadPool(processors);
+        ArrayList<Future<Long>> task = new ArrayList<>(processors);
+        int count = processors;
+        while (count-- > 0) {
+            long endTime = System.currentTimeMillis() + seconds * 1000;
+            task.add(executor.submit(() -> {
+                long total = 0;
+                while (endTime > System.currentTimeMillis()) {
+                    atomicLong.incrementAndGet();
+                    total++;
+                }
+                log.info("持续{}秒获取到{}个序列值", seconds, total);
+                return total;
+            }));
+        }
+        long sum = 0;
+        for (Future<Long> future : task) {
+            sum += future.get();
+        }
+        log.info("{}线程，花费{}秒，获取序列值{}个，平均一个线程一秒{}获取个序列值", processors, seconds, sum, (sum/seconds/processors));
+    }
+
 }

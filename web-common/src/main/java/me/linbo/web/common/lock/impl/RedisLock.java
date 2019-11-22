@@ -7,6 +7,8 @@ import me.linbo.web.common.spring.SpringContextHolder;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -15,18 +17,16 @@ import java.util.concurrent.TimeUnit;
  * @date 2019-11-21 10:46
  */
 @Slf4j
-public class RedisDistributedLock implements IDistributedLock {
+public class RedisLock implements IDistributedLock {
 
     private RedissonClient redissonClient;
-    private RLock lock;
 
     /** redis锁对应的key */
     private String lockKey;
 
-    public RedisDistributedLock(String lockName) {
+    public RedisLock(String lockName) {
         this.lockKey = "concurrent:lock:" + lockName;
         redissonClient = SpringContextHolder.getBean(RedissonClient.class);
-        lock = redissonClient.getLock(this.lockKey);
         log.info("初始化redis分布式锁： {}", this.lockKey);
     }
 
@@ -60,16 +60,19 @@ public class RedisDistributedLock implements IDistributedLock {
     }
 
     private void lock(long timeout) throws DistributedLockException {
+        RLock lock = redissonClient.getLock(this.lockKey);
         lock.lock(timeout, TimeUnit.MILLISECONDS);
     }
 
     @Override
     public void unlock() throws DistributedLockException {
         try {
+            RLock lock = redissonClient.getLock(this.lockKey);
             lock.unlock();
         } catch (Exception e) {
             log.error("释放redis分布式锁失败", e);
             throw new DistributedLockException(e);
         }
     }
+
 }
