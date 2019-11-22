@@ -6,9 +6,6 @@ import me.linbo.web.common.spring.SpringContextHolder;
 import org.redisson.api.RAtomicLong;
 import org.redisson.api.RedissonClient;
 
-import java.io.Closeable;
-import java.io.IOException;
-
 /**
  * @author LinBo
  * @date 2019-11-22 9:10

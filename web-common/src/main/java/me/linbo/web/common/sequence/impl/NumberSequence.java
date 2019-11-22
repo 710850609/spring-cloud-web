@@ -1,4 +1,4 @@
-package me.linbo.web.common.sequence.impl.custom;
+package me.linbo.web.common.sequence.impl;
 
 import me.linbo.web.common.sequence.ISequence;
 import me.linbo.web.common.spring.SpringContextHolder;
@@ -6,7 +6,7 @@ import org.redisson.api.RAtomicLong;
 import org.redisson.api.RedissonClient;
 
 /**
- * 数字序列
+ * redis数字序列生成
  * @author LinBo
  * @date 2019-11-22 10:55
  */

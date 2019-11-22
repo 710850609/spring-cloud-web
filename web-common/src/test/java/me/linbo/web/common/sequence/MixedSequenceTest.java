@@ -1,6 +1,6 @@
 package me.linbo.web.common.sequence;
 
-import me.linbo.web.common.sequence.impl.custom.NumberCacheSequence;
+import me.linbo.web.common.sequence.impl.NumberCacheSequence;
 import org.junit.Test;
 
 public class MixedSequenceTest {

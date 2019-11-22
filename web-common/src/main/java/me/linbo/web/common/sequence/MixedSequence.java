@@ -1,8 +1,8 @@
 package me.linbo.web.common.sequence;
 
-import me.linbo.web.common.sequence.impl.custom.DateSequence;
-import me.linbo.web.common.sequence.impl.custom.NumberSequence;
-import me.linbo.web.common.sequence.impl.custom.StringSequence;
+import me.linbo.web.common.sequence.impl.DateSequence;
+import me.linbo.web.common.sequence.impl.NumberSequence;
+import me.linbo.web.common.sequence.impl.StringSequence;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class MixedSequence implements ISequence<String> {
     }
 
     public MixedSequence str(String source) {
-        return nextSequence(new StringSequence(this.namespace, source));
+        return nextSequence(new StringSequence(source));
     }
 
 

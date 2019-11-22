@@ -1,12 +1,10 @@
 package me.linbo.web.common.sequence;
 
-import me.linbo.web.common.lock.IDistributedLock;
 import me.linbo.web.common.sequence.impl.RedisSequence;
 import me.linbo.web.common.sequence.impl.SnowFlakeSequence;
 import me.linbo.web.common.sequence.impl.ZookeeperSequence;
 import me.linbo.web.common.sequence.impl.ZookeeperSequencePro;
-import me.linbo.web.common.sequence.impl.custom.NumberCacheSequence;
-import me.linbo.web.common.sequence.impl.custom.NumberSequence;
+import me.linbo.web.common.sequence.impl.NumberCacheSequence;
 
 /**
  * 分布式序列维护入口

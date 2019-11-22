@@ -1,4 +1,4 @@
-package me.linbo.web.common.sequence.impl.custom;
+package me.linbo.web.common.sequence.impl;
 
 import me.linbo.web.common.sequence.ISequence;
 

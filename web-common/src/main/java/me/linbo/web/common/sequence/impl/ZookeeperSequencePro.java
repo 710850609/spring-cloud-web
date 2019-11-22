@@ -17,11 +17,9 @@ import org.springframework.util.Assert;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * 基于zookeeper实现分布式id生成
+ * 基于zookeeper实现分布式id生成，带有本地缓存
  * @author LinBo
  * @date 2019-11-19 10:12
  */
@@ -34,7 +32,6 @@ public class ZookeeperSequencePro implements ISequence<Long> {
     private String zNodeName;
 
     private static final ExecutorService FIXED_THREAD_POOL = Executors.newFixedThreadPool(1);
-    private final AtomicBoolean isFetching = new AtomicBoolean(false);
 
     private CuratorFramework client;
 
@@ -51,27 +48,27 @@ public class ZookeeperSequencePro implements ISequence<Long> {
     }
 
     /** 本地缓存当前值 */
-    private AtomicLong curNum = new AtomicLong(0);
-    /** 本地婚车最大值 */
-    private AtomicLong maxNum = new AtomicLong(0);
+    private long curNum = 0;
+    /** 本地缓存最大值 */
+    private long maxNum = 0;
     /** 批次获取数量 */
     private static final long PERIOD = 1000;
 
     @Override
-    public Long next() {
+    public synchronized Long next() {
         // 从本地缓存中取
-        if (curNum.get() == 0 || curNum.get() >= maxNum.get() - 1) {
+        if (curNum == 0 || curNum >= maxNum - 1) {
             fetchSegment();
         }
-        long num = curNum.addAndGet(1);
-        if (!isFetching.get() && maxNum.get() - curNum.get() < (PERIOD / 5)) {
+        long num = curNum++;
+        if (maxNum - curNum < (PERIOD / 5)) {
             // 如果缓存量低于缓存批次的20%，则提前异步批量获取进行缓存
             FIXED_THREAD_POOL.submit(() -> fetchSegment());
         }
         return num;
     }
 
-    public void init() {
+    private synchronized void init() {
         ZookeeperProperties zookeeperProperties = SpringContextHolder.getBean(ZookeeperProperties.class);
         ExponentialBackoffRetry retryPolicy = new ExponentialBackoffRetry(zookeeperProperties.getBaseSleepTimeMs(),
                 zookeeperProperties.getMaxRetries(),
@@ -90,14 +87,13 @@ public class ZookeeperSequencePro implements ISequence<Long> {
 
     private synchronized void fetchSegment() {
         try {
-            isFetching.set(true);
             this.interProcessLock.acquire();
             Stat stat = client.checkExists().forPath(zNodeName);
             if (stat == null) {
                 log.trace("创建zookeeper分布式id节点: {}", zNodeName);
                 client.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(zNodeName, String.valueOf(PERIOD).getBytes());
-                maxNum.set(PERIOD);
-                curNum.set(0);
+                maxNum = PERIOD;
+                curNum = 0;
             } else {
                 String str = new String(client.getData().forPath(zNodeName));
                 long curVal = 0;
@@ -105,13 +101,13 @@ public class ZookeeperSequencePro implements ISequence<Long> {
                     curVal = Long.parseLong(str);
                 }
                 // 如果当前序列值不是初始化值，则回写zk上的值
-                if (curNum.get() == 0) {
+                if (curNum == 0) {
                     log.trace("读取zookeeper分布式id节点值: {}:{}", zNodeName, curVal);
-                    curNum.set(curVal);
+                    curNum = curVal;
                 }
                 long nextVal = curVal + PERIOD;
                 client.setData().forPath(zNodeName, String.valueOf(nextVal).getBytes());
-                maxNum.set(nextVal);
+                maxNum = nextVal;
                 log.trace("设置zookeeper节点最大序列值: {}:{}", zNodeName, nextVal);
             }
         } catch (Exception e) {
@@ -125,7 +121,6 @@ public class ZookeeperSequencePro implements ISequence<Long> {
                 e.printStackTrace();
                 log.error("释放zookeeper节点锁失败", e);
             }
-            isFetching.set(false);
         }
     }
 
