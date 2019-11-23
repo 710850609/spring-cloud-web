@@ -7,10 +7,10 @@ package me.linbo.web.common.sequence;
  */
 public class DistributedSequenceException extends RuntimeException {
 
-    public DistributedSequenceException() {
-    }
-
     public DistributedSequenceException(Throwable cause) {
         super(cause);
+    }
+
+    public DistributedSequenceException(String s) {
     }
 }

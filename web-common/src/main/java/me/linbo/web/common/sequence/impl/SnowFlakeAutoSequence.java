@@ -1,5 +1,7 @@
 package me.linbo.web.common.sequence.impl;
 
+import me.linbo.web.common.lock.DistributedLockException;
+import me.linbo.web.common.sequence.DistributedSequenceException;
 import me.linbo.web.common.sequence.ISequence;
 import me.linbo.web.common.spring.SpringContextHolder;
 import org.redisson.api.RAtomicLong;
@@ -16,43 +18,46 @@ import java.util.concurrent.TimeUnit;
  */
 public class SnowFlakeAutoSequence implements ISequence<Long> {
 
+    private String redisKey;
+
     private String namespace;
 
     public SnowFlakeAutoSequence(String namespace) {
         this.namespace = "concurrent:snow-flake:" + namespace;
+        register();
     }
 
     private void register() {
-        RedissonClient redissonClient = SpringContextHolder.getBean(RedissonClient.class);
+        StringRedisTemplate redisTemplate = SpringContextHolder.getBean(StringRedisTemplate.class);
+        boolean isRegister = false;
         int dataCenterId = 1;
-        String dataCenterKey = this.namespace + ":" + dataCenterId;
-        RAtomicLong dataCenter = redissonClient.getAtomicLong(dataCenterKey);
-        if (dataCenter.get() == 0) {
-            dataCenter.addAndGet(1L);
-        }
         do {
-            String machineKey = this.namespace + ":" + datacenterId;
-        } while (datacenterId > (1 << DATACENTER_LEFT));
-
-
-        // 如果超过最大
-
-
-        this.datacenterId = datacenterId;
-        this.machineId = machineId;
-
+            if (++datacenterId > (1 << DATACENTER_LEFT)) {
+                break;
+            }
+            isRegister = registerMachine(dataCenterId, redisTemplate);
+        } while (!isRegister);
+        if (isRegister) {
+            this.datacenterId = dataCenterId;
+        } else {
+            throw new DistributedSequenceException("注册雪花算法失败");
+        }
     }
 
-    private void registerMachine(String dataCenterKey, RedissonClient redissonClient) {
-        int machineId = 1;
-        String machineKey = dataCenterKey + ":" + machineId;
-        RAtomicLong dataCenter = redissonClient.getAtomicLong(machineKey);
-        if (dataCenter.get() == 0) {
-            dataCenter.addAndGet(1L);
-        }
+    private boolean registerMachine(int dataCenterKey, StringRedisTemplate redisTemplate) {
+        int machineId = 0;
+        boolean isRegister = false;
+        String uuid = UUID.randomUUID().toString();
         do {
-            redissonClient.getAtomicLong(machineKey);
-        } while (machineId < (1 << MACHINE_BIT));
+            if (machineId++ > 1 << MACHINE_LEFT) {
+                break;
+            }
+            String machineKey = this.namespace + ":" + dataCenterKey + ":" + machineId;
+            isRegister = redisTemplate.opsForValue().setIfAbsent(machineKey, uuid);
+            this.redisKey = machineKey;
+            this.machineId = machineId;
+        } while (!isRegister);
+        return isRegister;
     }
 
     /**

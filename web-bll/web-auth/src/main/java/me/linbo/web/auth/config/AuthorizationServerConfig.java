@@ -52,5 +52,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .authorities("oauth2")
                 //设置支持[密码模式、授权码模式、token刷新]
                 .authorizedGrantTypes("password", "authorization_code", "refresh_token");
+
     }
 }

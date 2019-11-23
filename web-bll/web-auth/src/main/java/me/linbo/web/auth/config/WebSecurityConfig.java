@@ -2,7 +2,9 @@ package me.linbo.web.auth.config;
 
 import me.linbo.web.auth.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -30,6 +32,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
  */
 @EnableWebSecurity
 @Configuration
+@EnableConfigurationProperties()
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired

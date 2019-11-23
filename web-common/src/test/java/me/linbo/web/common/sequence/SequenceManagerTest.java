@@ -49,6 +49,11 @@ public class SequenceManagerTest {
         testBase(SequenceManager.SF_ORDER_NO);
     }
 
+    @Test
+    public void testSfAuto() throws Exception {
+        testBase(SequenceManager.SF_AUTO_ORDER_NO);
+    }
+
     private void testBase(ISequence<Long> sequence) throws Exception {
         int processors = Runtime.getRuntime().availableProcessors();
         int count = processors;

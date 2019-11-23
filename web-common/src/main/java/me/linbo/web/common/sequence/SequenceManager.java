@@ -1,10 +1,6 @@
 package me.linbo.web.common.sequence;
 
-import me.linbo.web.common.sequence.impl.RedisSequence;
-import me.linbo.web.common.sequence.impl.SnowFlakeSequence;
-import me.linbo.web.common.sequence.impl.ZookeeperSequence;
-import me.linbo.web.common.sequence.impl.ZookeeperSequencePro;
-import me.linbo.web.common.sequence.impl.NumberCacheSequence;
+import me.linbo.web.common.sequence.impl.*;
 
 /**
  * 分布式序列维护入口
@@ -14,6 +10,8 @@ import me.linbo.web.common.sequence.impl.NumberCacheSequence;
 public interface SequenceManager {
 
     ISequence<Long> SF_ORDER_NO = new SnowFlakeSequence(1, 1);
+
+    ISequence<Long> SF_AUTO_ORDER_NO = new SnowFlakeAutoSequence("order-no");
 
     ISequence<Long> ZK_ORDER_NO = new ZookeeperSequence("order-no");
 
