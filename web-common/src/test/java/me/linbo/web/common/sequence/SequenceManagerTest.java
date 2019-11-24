@@ -52,6 +52,7 @@ public class SequenceManagerTest {
     @Test
     public void testSfAuto() throws Exception {
         testBase(SequenceManager.SF_AUTO_ORDER_NO);
+        Thread.sleep(60000L);
     }
 
     private void testBase(ISequence<Long> sequence) throws Exception {

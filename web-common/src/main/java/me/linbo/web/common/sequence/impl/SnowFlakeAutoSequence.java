@@ -1,14 +1,13 @@
 package me.linbo.web.common.sequence.impl;
 
-import me.linbo.web.common.lock.DistributedLockException;
+import lombok.extern.slf4j.Slf4j;
 import me.linbo.web.common.sequence.DistributedSequenceException;
 import me.linbo.web.common.sequence.ISequence;
 import me.linbo.web.common.spring.SpringContextHolder;
-import org.redisson.api.RAtomicLong;
-import org.redisson.api.RedissonClient;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
-import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -16,48 +15,75 @@ import java.util.concurrent.TimeUnit;
  * @author LinBo
  * @date 2019-11-22 16:47
  */
+@Slf4j
 public class SnowFlakeAutoSequence implements ISequence<Long> {
 
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private String redisKey;
+    /** 注册有效时间1分钟 */
+    private static final long VALID_SECONDS = 60L;
 
     private String namespace;
 
     public SnowFlakeAutoSequence(String namespace) {
         this.namespace = "concurrent:snow-flake:" + namespace;
         register();
+        scheduler.scheduleAtFixedRate(() -> renewalMachine(), 1, VALID_SECONDS - 1, TimeUnit.SECONDS);
     }
 
+    /**
+     * 注册入口
+     */
     private void register() {
-        StringRedisTemplate redisTemplate = SpringContextHolder.getBean(StringRedisTemplate.class);
         boolean isRegister = false;
         int dataCenterId = 1;
         do {
             if (++datacenterId > (1 << DATACENTER_LEFT)) {
                 break;
             }
-            isRegister = registerMachine(dataCenterId, redisTemplate);
+            isRegister = registerMachine(dataCenterId);
         } while (!isRegister);
         if (isRegister) {
             this.datacenterId = dataCenterId;
         } else {
             throw new DistributedSequenceException("注册雪花算法失败");
         }
+        log.debug("雪花算法注册成功，数据中心: {}, 机器: {}, redisKey: {}", this.datacenterId, this.machineId, this.redisKey);
     }
 
-    private boolean registerMachine(int dataCenterKey, StringRedisTemplate redisTemplate) {
+    /**
+     * 注册机器
+     * @param dataCenterKey
+     * @return
+     */
+    private boolean registerMachine(int dataCenterKey) {
+        StringRedisTemplate redisTemplate = SpringContextHolder.getBean(StringRedisTemplate.class);
         int machineId = 0;
-        boolean isRegister = false;
-        String uuid = UUID.randomUUID().toString();
+        Boolean isRegister = false;
         do {
             if (machineId++ > 1 << MACHINE_LEFT) {
                 break;
             }
             String machineKey = this.namespace + ":" + dataCenterKey + ":" + machineId;
-            isRegister = redisTemplate.opsForValue().setIfAbsent(machineKey, uuid);
+            isRegister = redisTemplate.opsForValue().setIfAbsent(machineKey, "", VALID_SECONDS, TimeUnit.SECONDS);
             this.redisKey = machineKey;
             this.machineId = machineId;
-        } while (!isRegister);
+        } while (isRegister == null || !isRegister);
         return isRegister;
+    }
+
+    /**
+     * 机器续期
+     */
+    private void renewalMachine() {
+        try {
+            log.debug("雪花算法续期, redisKey= {}", this.redisKey);
+            StringRedisTemplate redisTemplate = SpringContextHolder.getBean(StringRedisTemplate.class);
+            redisTemplate.opsForValue().set(this.redisKey, "", VALID_SECONDS, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("雪花算法续期失败", e);
+        }
     }
 
     /**
