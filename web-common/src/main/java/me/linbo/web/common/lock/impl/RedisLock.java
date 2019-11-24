@@ -7,8 +7,6 @@ import me.linbo.web.common.spring.SpringContextHolder;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
